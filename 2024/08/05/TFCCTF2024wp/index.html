@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="s_y_z_r_y">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="s_y_z_r_y">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="7道题做了5道。不知道为什么functional 这道题会被定成 easy 难度，虽然我确实有点太钻牛角尖了想着一定要逆出来搞得自己头晕脑胀的，唉……算了。 SIGNAL没有混淆没有壳，逻辑就是按顺序执行一些函数，函数里直接对flag上各位置的值进行比较判断是否正确，函数逻辑差不多长这样   直接一个个把各位置比较的值抄下来就得到 flag 了 License程序逻辑是对license的两部分进行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TFCCTF2024 writeup">
+<meta property="og:url" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="7道题做了5道。不知道为什么functional 这道题会被定成 easy 难度，虽然我确实有点太钻牛角尖了想着一定要逆出来搞得自己头晕脑胀的，唉……算了。 SIGNAL没有混淆没有壳，逻辑就是按顺序执行一些函数，函数里直接对flag上各位置的值进行比较判断是否正确，函数逻辑差不多长这样   直接一个个把各位置比较的值抄下来就得到 flag 了 License程序逻辑是对license的两部分进行">
+<meta property="og:locale">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-02_21-27-11.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_20-23-15.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-34.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-46.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-59.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-54.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_16-56-44.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_17-05-24.png">
+<meta property="og:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-03_17-24-08.png">
+<meta property="article:published_time" content="2024-08-05T12:19:07.000Z">
+<meta property="article:modified_time" content="2024-08-05T14:46:11.168Z">
+<meta property="article:author" content="s_y_z_r_y">
+<meta property="article:tag" content="re">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://syzry.github.io/2024/08/05/TFCCTF2024wp/2024-08-02_21-27-11.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/gugu.ico">
+    <title>TFCCTF2024 writeup · s_y_z_r_y&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">s_y_z_r_y's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">s_y_z_r_y&#39;s blog.</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">TFCCTF2024 writeup</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/feixu.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                TFCCTF2024 writeup
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="re">re</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="wp">wp</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/08/05</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>7道题做了5道。不知道为什么<code>functional</code> 这道题会被定成 easy 难度，虽然我确实有点太钻牛角尖了想着一定要逆出来搞得自己头晕脑胀的，唉……算了。</p>
+<h1 id="SIGNAL"><a href="#SIGNAL" class="headerlink" title="SIGNAL"></a>SIGNAL</h1><p>没有混淆没有壳，逻辑就是按顺序执行一些函数，函数里直接对flag上各位置的值进行比较判断是否正确，函数逻辑差不多长这样</p>
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-02_21-27-11.png" class="" title="2024-08-02_21-27-11">
+
+<p>直接一个个把各位置比较的值抄下来就得到 flag 了</p>
+<h1 id="License"><a href="#License" class="headerlink" title="License"></a>License</h1><p>程序逻辑是对license的两部分进行不同的操作并比较字符串，判断是否正确。都是可逆的操作所以直接逆出来就可以了。但是输入的不是可见字符，所以调试的过程中花了一些时间。然后要连接远程服务器来获取flag。</p>
+<p>脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">fg1 = [<span class="number">0x58</span>, <span class="number">0x73</span>, <span class="number">0x6C</span>, <span class="number">0x33</span>, <span class="number">0x42</span>, <span class="number">0x44</span>, <span class="number">0x78</span>, <span class="number">0x50</span>, <span class="number">0x00</span>]</span><br><span class="line">fg2 = [<span class="number">0x6D</span>, <span class="number">0x7A</span>, <span class="number">0x58</span>, <span class="number">0x61</span>, <span class="number">0x50</span>, <span class="number">0x4C</span>, <span class="number">0x7A</span>, <span class="number">0x52</span>, <span class="number">0x00</span>]</span><br><span class="line">a1 = [<span class="number">0</span>] * <span class="number">8</span></span><br><span class="line">v5 = [<span class="number">0</span>] * <span class="number">8</span></span><br><span class="line">a2 = [<span class="number">0</span>] * <span class="number">8</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">    v5[i] = <span class="number">0x33</span>^fg1[i]</span><br><span class="line">    <span class="comment"># print(v5[i], end=&#x27;|&#x27;)</span></span><br><span class="line">    v1 = i % <span class="number">3</span></span><br><span class="line">    <span class="keyword">if</span> v1 == <span class="number">2</span>:</span><br><span class="line">        a1[i] = v5[i] + <span class="number">37</span></span><br><span class="line">    <span class="keyword">elif</span> v1 &lt;= <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">if</span> v1 == <span class="number">1</span>:</span><br><span class="line">            a1[i] = v5[i] - <span class="number">16</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            a1[i] = v5[i] ^ <span class="number">0x5A</span></span><br><span class="line"></span><br><span class="line">b=<span class="string">b&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">    b=b+<span class="built_in">bytes</span>([a1[i]])</span><br><span class="line">b=b+<span class="string">b&#x27;-&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">    <span class="keyword">if</span> fg2[i]&gt;=<span class="number">97</span>:</span><br><span class="line">        a2[i]=fg2[i]-<span class="number">97</span></span><br><span class="line">        <span class="keyword">if</span> a2[i]&lt;<span class="number">5</span>:</span><br><span class="line">            a2[i]+=<span class="number">26</span></span><br><span class="line">        a2[i]+=<span class="number">92</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        a2[i]=fg2[i]-<span class="number">65</span></span><br><span class="line">        <span class="keyword">if</span> a2[i]&lt;<span class="number">17</span>:</span><br><span class="line">            a2[i]+=<span class="number">26</span></span><br><span class="line">        a2[i]+=<span class="number">48</span></span><br><span class="line">    <span class="comment"># print(a1[i])</span></span><br><span class="line">    <span class="comment"># print(chr(a2[i]), end=&#x27;&#x27;)</span></span><br><span class="line">    b=b+<span class="built_in">bytes</span>([a2[i]])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;b:&#x27;</span>,b)</span><br><span class="line">elf=remote(<span class="string">&#x27;challs.tfcctf.com&#x27;</span>,<span class="number">11111</span>)</span><br><span class="line">elf.sendline(b)</span><br><span class="line">ans=elf.recvuntil(<span class="string">&#x27;&#125;&#x27;</span>,timeout=<span class="number">5</span>)</span><br><span class="line"><span class="built_in">print</span>(ans)</span><br></pre></td></tr></table></figure>
+
+<h1 id="BRAVE-TRAVELER"><a href="#BRAVE-TRAVELER" class="headerlink" title="BRAVE TRAVELER"></a>BRAVE TRAVELER</h1><p>一个小思路题。</p>
+<p>题里算是建了个树，然后根是’\0’，’\0’连着’g’，程序就这样从’\0’开始一直 bfs 下去直到没有办法遍历。然后原始的程序直接就会输出 go0d luck.</p>
+<p>后面自己的思路乱了，把这个树写出来了之后想着怎么输入，但后面回看题发现flag只需要输出的内容。</p>
+<p>稍微分析一下就发现 flag 应该是从’{‘开始遍历，获得方法就是把’\0’连着的’g’改成’{‘就行了</p>
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_20-23-15.png" class="" title="2024-08-03_20-23-15">
+
+<h1 id="VIRTUAL-REV"><a href="#VIRTUAL-REV" class="headerlink" title="VIRTUAL-REV"></a>VIRTUAL-REV</h1><p>老老实实的 vm，就是输入字符串，调用对应的函数。有11个二元函数，6个一元函数，每个函数最多用10次。还有8个寄存器，在re里只用得到7个寄存器说实话，提示里说 Pwn 还要用到这个题，那剩下一个寄存器应该是给 pwn 用的。最后对于5个寄存器里的值进行判断，构造使用函数的方式就可以了。</p>
+<p>对函数整理后有</p>
+<table>
+<thead>
+<tr>
+<th>调用的字符串</th>
+<th>序号</th>
+<th>funcv8_i(a1,a2)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>XZD</td>
+<td>1</td>
+<td>a1^a2</td>
+</tr>
+<tr>
+<td>STF</td>
+<td>2</td>
+<td>a1&lt;&lt;a2</td>
+</tr>
+<tr>
+<td>QER</td>
+<td>3</td>
+<td>a1&gt;&gt;a2</td>
+</tr>
+<tr>
+<td>LQE</td>
+<td>4</td>
+<td>a1&amp;a2</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>5</td>
+<td>a1|a2</td>
+</tr>
+<tr>
+<td>RALK</td>
+<td>6</td>
+<td>a1+a2</td>
+</tr>
+<tr>
+<td>MQZL</td>
+<td>7</td>
+<td>a1-a2</td>
+</tr>
+<tr>
+<td>LQDM</td>
+<td>8</td>
+<td>a1&#x2F;&#x2F;a2</td>
+</tr>
+<tr>
+<td>SAMO</td>
+<td>9</td>
+<td>a1%a2</td>
+</tr>
+<tr>
+<td>XKA</td>
+<td>10</td>
+<td>a1*a2</td>
+</tr>
+<tr>
+<td>MISZ</td>
+<td>11</td>
+<td>a2</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>funcv9_i(a1)</td>
+</tr>
+<tr>
+<td>NEAZ</td>
+<td>1</td>
+<td>~a1</td>
+</tr>
+<tr>
+<td>MINL</td>
+<td>2</td>
+<td>(~a1)+1</td>
+</tr>
+<tr>
+<td>OAN</td>
+<td>3</td>
+<td>a1+1</td>
+</tr>
+<tr>
+<td>MAZ</td>
+<td>4</td>
+<td>不知道干啥，re用不到</td>
+</tr>
+<tr>
+<td>NO</td>
+<td>5</td>
+<td>a1</td>
+</tr>
+<tr>
+<td>BRAILA</td>
+<td>6</td>
+<td>调用了syscall，应该是pwn用的</td>
+</tr>
+</tbody></table>
+<p>FLG 函数：获取 flag.txt</p>
+<p>寄存器：l0 l1 l2 l3 l4 l5 lax lip</p>
+<p>脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">exp=<span class="string">&#x27;&#x27;&#x27;XZD l5,l5</span></span><br><span class="line"><span class="string">XZD lax,lax</span></span><br><span class="line"><span class="string">XZD l0,l0</span></span><br><span class="line"><span class="string">XZD l1,l1</span></span><br><span class="line"><span class="string">XZD l2,l2</span></span><br><span class="line"><span class="string">XZD l3,l3</span></span><br><span class="line"><span class="string">XZD l4,l4</span></span><br><span class="line"><span class="string">OAN lax</span></span><br><span class="line"><span class="string">OAN l5</span></span><br><span class="line"><span class="string">OAN l0</span></span><br><span class="line"><span class="string">OAN l2</span></span><br><span class="line"><span class="string">OAN l3</span></span><br><span class="line"><span class="string">OAN l4</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">SQL l1,l5</span></span><br><span class="line"><span class="string">SQL l2,l5</span></span><br><span class="line"><span class="string">SQL l3,l5</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">SQL l0,l5</span></span><br><span class="line"><span class="string">SQL l1,l5</span></span><br><span class="line"><span class="string">SQL l3,l5</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">SQL l0,l5</span></span><br><span class="line"><span class="string">SQL l2,l5</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">SQL l0,l5</span></span><br><span class="line"><span class="string">SQL l1,l5</span></span><br><span class="line"><span class="string">RALK l2,l5</span></span><br><span class="line"><span class="string">RALK l3,l5</span></span><br><span class="line"><span class="string">RALK l4,l5</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">RALK l1,l5</span></span><br><span class="line"><span class="string">RALK l2,l5</span></span><br><span class="line"><span class="string">RALK l3,l5</span></span><br><span class="line"><span class="string">RALK l4,l5</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">RALK l0,l5</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">STF l5,lax</span></span><br><span class="line"><span class="string">RALK l0,l5</span></span><br><span class="line"><span class="string">FLG&#x27;&#x27;&#x27;</span></span><br><span class="line">explines=exp.split(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"><span class="comment"># print(explines)</span></span><br><span class="line"><span class="comment"># elf=process(&#x27;./virtual-rev&#x27;)</span></span><br><span class="line">elf=remote(<span class="string">&#x27;challs.tfcctf.com&#x27;</span>, <span class="number">32179</span>)</span><br><span class="line">elf.recvuntil(<span class="string">b&#x27;code:&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;start to doit&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> explines:</span><br><span class="line">    <span class="keyword">if</span> i==<span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    elf.sendline(<span class="built_in">bytes</span>(i,encoding=<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">    <span class="comment"># print(i)</span></span><br><span class="line">message=elf.recvall(timeout=<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">str</span>(message))</span><br></pre></td></tr></table></figure>
+
+<h1 id="x8"><a href="#x8" class="headerlink" title="x8"></a>x8</h1><p>有点神经病的题，做的时候看到那么多人出了感觉自己像个sb做不出来，后面做出来了感觉还好，赛后看他们的做法又觉得自己像个sb。</p>
+<p>rust 题。然后，简单来说，x8 程序本身是一个虚拟机，然后给了个 program.bin，里面有指令和数据。</p>
+<p>本来打算理清程序逻辑，但 x8 是个 rust，搜出来也没 x8 的库（具体来说，没有搜到虚拟机作用的库），看得脑壳疼，本来打算放弃了，但是我搞不懂为什么这道题比<code>virtual-rev</code>那道题过的人都还多，所以继续看，发现有</p>
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-34.png" class="" title="2024-08-03_17-28-34">
+
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-46.png" class="" title="2024-08-03_17-28-46">
+
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-59.png" class="" title="2024-08-03_17-28-59">
+
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_17-28-54.png" class="" title="2024-08-03_17-28-54">
+
+<p>在动调的时候，对第二个 readstdinstack 函数下断点，发现还没输入就停止，输入后跳转到函数外，搜索输入的字符串，发现就有了。所以这就是输入的函数。</p>
+<p>后面的就是大胆假设，因为里面的看起来有用的函数就这些，实际上除了 cmp, xor 外还有 add，但在动调后发现 add 并不会对输入的值有什么影响（大概）。所以假设只进行了异或操作然后比较。</p>
+<p>在第二个 xor 函数下断点后，发现</p>
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_16-56-44.png" class="" title="2024-08-03_16-56-44">
+
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_17-05-24.png" class="" title="2024-08-03_17-05-24">
+
+<p>04是[rsi+rdi+401h]，04左边那个byte是[rsi+rax+401h]</p>
+<p>在后面 cmp 函数下断点发现刚好就是04左边的 byte 和04右边的 byte 进行比较。但是我没有截图。</p>
+<p>后面就是把所有运行到 xor 函数的断点时的04位置和66位置的值记下来，然后异或就得到 flag。</p>
+<p>脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;TFCCTF&#123;&#x27;</span>,end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">fg1=[<span class="number">0xD7</span>,<span class="number">0x07</span>,<span class="number">0xea</span>,<span class="number">0x1c</span>,<span class="number">0x10</span>,<span class="number">0x22</span>,<span class="number">0xce</span>,<span class="number">0x0b</span>,<span class="number">0x4e</span>,<span class="number">0x69</span>,<span class="number">0xda</span>,<span class="number">0xff</span>,<span class="number">0x0a</span>,<span class="number">0x5d</span>,<span class="number">0x7d</span>,<span class="number">0x04</span>,<span class="number">0x6f</span>,<span class="number">0xe5</span>,<span class="number">0xec</span>,<span class="number">0xcb</span>,<span class="number">0x36</span>,<span class="number">0x37</span>,<span class="number">0xb7</span>,<span class="number">0x71</span>,<span class="number">0x3b</span>,<span class="number">0xf9</span>,<span class="number">0xbd</span>,<span class="number">0x09</span>,<span class="number">0xcd</span>,<span class="number">0x1d</span>,<span class="number">0x8c</span>,<span class="number">0x94</span>,<span class="number">0xde</span>]</span><br><span class="line">fg2=[<span class="number">0xE4</span>,<span class="number">0x62</span>,<span class="number">0x8e</span>,<span class="number">0x79</span>,<span class="number">0x25</span>,<span class="number">0x13</span>,<span class="number">0xaa</span>,<span class="number">0x6a</span>,<span class="number">0x7f</span>,<span class="number">0x5e</span>,<span class="number">0xea</span>,<span class="number">0xc6</span>,<span class="number">0x38</span>,<span class="number">0x6b</span>,<span class="number">0x45</span>,<span class="number">0x66</span>,<span class="number">0x5d</span>,<span class="number">0x86</span>,<span class="number">0x89</span>,<span class="number">0xad</span>,<span class="number">0x52</span>,<span class="number">0x53</span>,<span class="number">0xd4</span>,<span class="number">0x15</span>,<span class="number">0x02</span>,<span class="number">0xca</span>,<span class="number">0xde</span>,<span class="number">0x3d</span>,<span class="number">0xae</span>,<span class="number">0x79</span>,<span class="number">0xb5</span>,<span class="number">0xac</span>,<span class="number">0xa3</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(fg1)):</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(fg1[i]^fg2[i]),end=<span class="string">&#x27;&#x27;</span>)<span class="comment">#TFCCTF&#123;3ede51da1709268b2cefddcd93c4cd98&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/2024/08/05/TFCCTF2024wp/2024-08-03_17-24-08.png" class="" title="2024-08-03_17-24-08">
+
+<hr>
+<p>赛后看他们解法，有侧信道攻击暴力破的，有直接把program.bin里面数据部分每两个一组，组内直接异或就得到 flag 的（但后面看源码，其实这有点算凑巧了），反正乱七八糟的</p>
+<h1 id="functional"><a href="#functional" class="headerlink" title="functional"></a>functional</h1><p>赛中没做出来。这是道 haskell 的题，以前其实没做过 haskell 的题（），然后赛中做的时候净想着要逆出来，但是调试的时候很恼火，总是有很多 sigalarm 的异常，最后也没逆出来。</p>
+<p>赛中用 hsdecomp 反编译了下，用的是 <a target="_blank" rel="noopener" href="https://github.com/jespiron/hsdecomp">https://github.com/jespiron/hsdecomp</a> 的版本。只知道长度要为28，以及最后要和28个大数比较。可能和模意义下的运算有关。</p>
+<p>反编译结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">jne</span><br><span class="line">jne</span><br><span class="line">jne</span><br><span class="line">jne</span><br><span class="line">Error in processing case at loc_4228304</span><br><span class="line">    Error: </span><br><span class="line">    Error Location: 142</span><br><span class="line">    Disassembly:</span><br><span class="line">        mov	rax, qword ptr [rbp + 0x10]</span><br><span class="line">        mov	rcx, rbx</span><br><span class="line">        and	ecx, 7</span><br><span class="line">        cmp	rcx, 1</span><br><span class="line">        je	0x4085dc</span><br><span class="line">        mov	rcx, qword ptr [rbx + 6]</span><br><span class="line">        mov	rbx, qword ptr [rbx + 0xe]</span><br><span class="line">        mov	qword ptr [rbp - 8], 0x408520</span><br><span class="line">        mov	rdx, rbx</span><br><span class="line">        mov	rbx, rax</span><br><span class="line">        mov	qword ptr [rbp], rdx</span><br><span class="line">        mov	qword ptr [rbp + 0x10], rcx</span><br><span class="line">        add	rbp, -8</span><br><span class="line">        test	bl, 7</span><br><span class="line">        jne	0x408520</span><br><span class="line">        jmp	qword ptr [rbx]</span><br><span class="line"></span><br><span class="line">Error when processing closure at &lt;index 0 in loc_4228208&#x27;s heap&gt;</span><br><span class="line">    Error: unknown function type</span><br><span class="line">    Error Location: 60</span><br><span class="line">    No Disassembly Available</span><br><span class="line"></span><br><span class="line">Error when processing closure at &lt;index 0 in loc_4228096&#x27;s heap&gt;</span><br><span class="line">    Error: unknown function type</span><br><span class="line">    Error Location: 60</span><br><span class="line">    No Disassembly Available</span><br><span class="line"></span><br><span class="line">Error when processing closure at &lt;index 3 in loc_4231184&#x27;s heap&gt;</span><br><span class="line">    Error: unknown function type</span><br><span class="line">    Error Location: 60</span><br><span class="line">    No Disassembly Available</span><br><span class="line"></span><br><span class="line">0 &#123;1: &#x27;False&#x27;, 2: &#x27;True&#x27;&#125;</span><br><span class="line">Main_main_closure = &gt;&gt;= $fMonadIO</span><br><span class="line">    getArgs</span><br><span class="line">    (\loc_4231184_arg_0 -&gt;</span><br><span class="line">        &gt;&gt; $fMonadIO</span><br><span class="line">            !!ERROR!!</span><br><span class="line">            (case == $fEqInt (length $fFoldable[] loc_4230544) (I# 28) of</span><br><span class="line">                False -&gt; return $fMonadIO Z0T,</span><br><span class="line">                False -&gt; (\Main_applyComplicatedFunction_info_arg_0 -&gt;</span><br><span class="line">                    (\loc_4228016_arg_0 loc_4228016_arg_1 -&gt;</span><br><span class="line">                        case loc_4228016_arg_0 of</span><br><span class="line">                            loc_4228080_case_tag_DEFAULT_arg_0@_DEFAULT -&gt; putStrLn !!ERROR!!,</span><br><span class="line">                            loc_4228080_case_tag_DEFAULT_arg_0@_DEFAULT -&gt; case loc_4228016_arg_1 of</span><br><span class="line">                                loc_4228192_case_tag_DEFAULT_arg_0@_DEFAULT -&gt; putStrLn !!ERROR!!,</span><br><span class="line">                                loc_4228192_case_tag_DEFAULT_arg_0@_DEFAULT -&gt; !!ERROR!!</span><br><span class="line">                    )</span><br><span class="line">                        Main_applyComplicatedFunction_info_arg_0</span><br><span class="line">                        (: (S# 260883060) (: (S# 660502790) (: (S# 56707938) (: (S# 56707938) (: (S# 260883060) (: (S# 660502790) (: (S# 634584031) (: (S# 200260288) (: (S# 429639680) (: (S# 312531986) (: (S# 429639680) (: (S# 264427048) (: (S# 624072856) (: (S# 228752755) (: (S# 671507957) (: (S# 384072754) (: (S# 677616060) (: (S# 228752755) (: (S# 671507957) (: (S# 228752755) (: (S# 882563116) (: (S# 429639680) (: (S# 200260288) (: (S# 228752755) (: (S# 998127277) (: (S# 960113301) (: (S# 960113301) (: (S# 843398876) []))))))))))))))))))))))))))))</span><br><span class="line">                )</span><br><span class="line">                    loc_4230544</span><br><span class="line">            )</span><br><span class="line">    )</span><br><span class="line">loc_4230544 = case null $fFoldable[] loc_4231184_arg_0 of</span><br><span class="line">    loc_4230624_case_tag_DEFAULT_arg_0@_DEFAULT -&gt; head loc_4231184_arg_0,</span><br><span class="line">    loc_4230624_case_tag_DEFAULT_arg_0@_DEFAULT -&gt; []</span><br></pre></td></tr></table></figure>
+
+<p>赛后一看，全是侧信道攻击……各种八仙过海的侧信道攻击……但是也怪不得动调的时候那么多 sigalarm 的异常了，记下来这点了。每正确一个字符就要多运行明显一串时间。</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://syzry.github.io">s_y_z_r_y</a>
+            <p>原文链接：<a href="https://syzry.github.io/2024/08/05/TFCCTF2024wp/">https://syzry.github.io/2024/08/05/TFCCTF2024wp/</a>
+            <p>发表日期：<a href="https://syzry.github.io/2024/08/05/TFCCTF2024wp/">August 5th 2024, 8:19:07 pm</a>
+            <p>更新日期：<a href="https://syzry.github.io/2024/08/05/TFCCTF2024wp/">August 5th 2024, 10:46:11 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/07/25/hello-world/" title="Hello World">
+                    <div class="prevTitle">Hello World</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:seeecho@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/syzry" class="iconfont-archer github" target="_blank" title="github"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SIGNAL"><span class="toc-number">1.</span> <span class="toc-text">SIGNAL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#License"><span class="toc-number">2.</span> <span class="toc-text">License</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BRAVE-TRAVELER"><span class="toc-number">3.</span> <span class="toc-text">BRAVE TRAVELER</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VIRTUAL-REV"><span class="toc-number">4.</span> <span class="toc-text">VIRTUAL-REV</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#x8"><span class="toc-number">5.</span> <span class="toc-text">x8</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#functional"><span class="toc-number">6.</span> <span class="toc-text">functional</span></a></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 2
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span>
+            <a class="archive-post-title" href="/2024/08/05/TFCCTF2024wp/">TFCCTF2024 writeup</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/hello-world/">Hello World</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="re">
+                <span class="iconfont-archer">&#xe606;</span>
+                re
+            </span>
+            <span class="sidebar-tag-name" data-tags="wp">
+                <span class="iconfont-archer">&#xe606;</span>
+                wp
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="CTF">
+            <span class="iconfont-archer">&#xe60a;</span>
+            CTF
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://syzry.github.io",
+        root: siteMetaRoot,
+        author: "s_y_z_r_y"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+            <script src='https://cdn.jsdelivr.net/npm/mermaid@8.11.0/dist/mermaid.min.js' onload="window.mermaid.initialize({theme: 'dark'})" async></script>
+    </body>
+</html>
