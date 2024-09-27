@@ -10,21 +10,23 @@
     <meta name="copyright" content="s_y_z_r_y">
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     <meta name="description" content="">
-    <meta name="description" content="Hello world！">
+    <meta name="description" content="题目题目名称：sedRust_happyVm 题目内容：unhappy rust, happy vm 题目分值：已答出34次，初始分值500.0，当前分值490.55，解出分值489.97 题目难度：容易 链接：https:&#x2F;&#x2F;github.com&#x2F;CTF-Archives&#x2F;2024-YCB-Undergraduate 思路如 https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;15615?time_">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://syzry.github.io/2024/07/25/hello-world/index.html">
+<meta property="og:title" content="记在2024羊城杯re题目sedRust_happyVm中踩到的frida坑">
+<meta property="og:url" content="https://syzry.github.io/2024/09/28/frida/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Hello world！">
+<meta property="og:description" content="题目题目名称：sedRust_happyVm 题目内容：unhappy rust, happy vm 题目分值：已答出34次，初始分值500.0，当前分值490.55，解出分值489.97 题目难度：容易 链接：https:&#x2F;&#x2F;github.com&#x2F;CTF-Archives&#x2F;2024-YCB-Undergraduate 思路如 https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;15615?time_">
 <meta property="og:locale">
-<meta property="article:published_time" content="2024-07-25T12:39:15.000Z">
-<meta property="article:modified_time" content="2024-07-25T13:16:50.823Z">
+<meta property="article:published_time" content="2024-09-27T17:02:42.000Z">
+<meta property="article:modified_time" content="2024-09-27T17:39:15.849Z">
 <meta property="article:author" content="s_y_z_r_y">
+<meta property="article:tag" content="re">
+<meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/gugu.ico">
-    <title>Hello World · s_y_z_r_y&#39;s blog</title>
+    <title>记在2024羊城杯re题目sedRust_happyVm中踩到的frida坑 · s_y_z_r_y&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -242,7 +244,7 @@
             <a href="/">s_y_z_r_y&#39;s blog.</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">Hello World</a>
+            <a href="#" class="post-name">记在2024羊城杯re题目sedRust_happyVm中踩到的frida坑</a>
         </div>
     </div>
 </header>
@@ -269,7 +271,7 @@
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-                Hello World
+                记在2024羊城杯re题目sedRust_happyVm中踩到的frida坑
             <!-- 404 -->
         </h1>
         <!-- 副标题 -->
@@ -281,16 +283,18 @@
             <div class="post-intros">
                 <!-- 文章页标签  -->
                     <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="re">re</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
 </div>
 
                 <!-- 文章字数统计 -->
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">843</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/07/25</span>
+                    <span class="post-intro-time">2024/09/28</span>
                     <!-- busuanzi -->
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                             <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
@@ -442,26 +446,52 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p>Hello world！</p>
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>题目名称：sedRust_happyVm 题目内容：unhappy rust, happy vm 题目分值：已答出34次，初始分值500.0，当前分值490.55，解出分值489.97 题目难度：容易</p>
+<p>链接：<a target="_blank" rel="noopener" href="https://github.com/CTF-Archives/2024-YCB-Undergraduate">https://github.com/CTF-Archives/2024-YCB-Undergraduate</a></p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>如 <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/15615?time__1311=Gqjxnii=DQdmqGXPeeqBKGQFT+7kDuiOWoD#toc-1">https://xz.aliyun.com/t/15615?time__1311=Gqjxnii%3DDQdmqGXPeeqBKGQFT%2B7kDuiOWoD#toc-1</a> 提到的，这道题先对输入进行类似base64的变换，将每3个字节变成4个字节，然后进行一系列操作，最后异或后判断异或结果是否为0</p>
+<h1 id="学到的东西"><a href="#学到的东西" class="headerlink" title="学到的东西"></a>学到的东西</h1><blockquote>
+<p>版本</p>
+<p>pip list|grep frida<br>frida              16.4.7<br>frida-tools        12.5.0</p>
+</blockquote>
+<p>算是复现吧，之前做的时候脑抽了。然后因为用frida用得还不够熟练，踩了挺多坑。下面记一下学到的东西。</p>
+<ol>
+<li>这个<code>on_message</code>函数是和js文件里的<code>send</code>函数对应</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">on_message</span>(<span class="params">message, data</span>):</span><br><span class="line">    <span class="keyword">global</span> new_number</span><br><span class="line">    <span class="built_in">print</span>(message)</span><br><span class="line">    <span class="keyword">if</span> message[<span class="string">&#x27;type&#x27;</span>] == <span class="string">&#x27;send&#x27;</span>:</span><br><span class="line">        new_number = message[<span class="string">&#x27;payload&#x27;</span>]</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;PAYLOAD&#x27;</span>,message[<span class="string">&#x27;payload&#x27;</span>])</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;MESSAGE&#x27;</span>,message)</span><br><span class="line">    <span class="keyword">elif</span> message[<span class="string">&#x27;type&#x27;</span>] == <span class="string">&quot;error&quot;</span>:</span><br><span class="line">        <span class="built_in">print</span>(message[<span class="string">&quot;description&quot;</span>])</span><br><span class="line">        <span class="built_in">print</span>(message[<span class="string">&quot;stack&quot;</span>])</span><br><span class="line">        <span class="built_in">print</span>(message[<span class="string">&quot;fileName&quot;</span>], <span class="string">&quot;line:&quot;</span>, message[<span class="string">&quot;lineNumber&quot;</span>], <span class="string">&quot;colum:&quot;</span>, message[<span class="string">&quot;columnNumber&quot;</span>])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(message)</span><br><span class="line"></span><br><span class="line">session = frida.attach(process.pid)</span><br><span class="line">script = session.create_script(jscode)</span><br><span class="line">script.on(<span class="string">&#x27;message&#x27;</span>, on_message)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>要<code>process.communicate()</code>之后，等hook的程序进程结束了才会清缓存区，frida输出的内容才会显示出来</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">script.on(<span class="string">&#x27;message&#x27;</span>, on_message)</span><br><span class="line">script.load()</span><br><span class="line">process.stdin.write(flag+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">output, error = process.communicate()</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p>frida hook的时候，我发现我写的脚本，在经过那个对每组异或结果判断是否为0，是的话就加1的地方的时候，本来脚本里也该加1，然后最后把结果传回python调用的主部分并判断爆破结果。但我写的脚本运行的时候一直没有返回结果，对每个加1的时候进行输出，发现有一部分加1的时候没有输出。</p>
+<p>我本来怀疑是因为hook的时机不对，因为hook晚了从而导致程序最开始那段加1的时候没有被hook上。但后来除了换hook的方式，我还把[rsi+0x41c]位置的值打印出来，发现打印出来的值其实是从0开始的。也就是说明，不是因为hook晚了，而是因为程序提前结束了。</p>
+<p>不像用在Android平台，在Windows用frida，因为hook的程序运行完就退出了，退出后frida进程也没法继续运行，所以要考虑延长程序活着的时间。</p>
+<p>延长的方式不是在python脚本中sleep，是要在js脚本里sleep（我本来以为两个一样，于是只在python脚本里slepp，结果因为这个误解浪费了好多时间）让我钻出这个思维盲区的是<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_65474192/article/details/139077559">https://blog.csdn.net/qq_65474192/article/details/139077559</a> ，尽管这是在Linux下的，但在Windows下的也有借鉴意义</p>
+<p>最后把正确的没坑的js脚本放出来：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> number = <span class="number">0</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">h6</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> base =  <span class="title class_">Module</span>.<span class="title function_">findBaseAddress</span>(<span class="string">&quot;vm.exe&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span>(base)&#123;</span><br><span class="line">        <span class="title class_">Interceptor</span>.<span class="title function_">attach</span>(base.<span class="title function_">add</span>(<span class="number">0xaa26</span>), &#123;</span><br><span class="line">                <span class="attr">onEnter</span>: <span class="keyword">function</span>(<span class="params">args</span>) &#123;</span><br><span class="line">                    <span class="keyword">try</span>&#123;</span><br><span class="line">                        number+=<span class="number">1</span></span><br><span class="line">                        <span class="keyword">var</span> delay = <span class="number">0x20</span>;</span><br><span class="line">                        <span class="keyword">var</span> start = <span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">getTime</span>(); </span><br><span class="line">                        <span class="keyword">while</span> (<span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">getTime</span>() &lt; start + delay); </span><br><span class="line">                    &#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">                        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;err:&quot;</span>,err)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;);</span><br><span class="line">        <span class="title class_">Interceptor</span>.<span class="title function_">attach</span>(base.<span class="title function_">add</span>(<span class="number">0xce56</span>), &#123;</span><br><span class="line">            <span class="attr">onEnter</span>: <span class="keyword">function</span>(<span class="params">args</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span>&#123;</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;end!&quot;</span>,number)</span><br><span class="line">                    <span class="title function_">send</span>(number)</span><br><span class="line">                    <span class="keyword">var</span> delay = <span class="number">0x100</span>;</span><br><span class="line">                    <span class="keyword">var</span> start = <span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">getTime</span>(); </span><br><span class="line">                    <span class="keyword">while</span> (<span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">getTime</span>() &lt; start + delay); </span><br><span class="line">                &#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;err:&quot;</span>,err)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">setImmediate</span>(h6);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>（顺带着把frida版本和frida-tools的版本弄齐了）</p>
 
     </article>
     <!-- license -->
         <div class="license-wrapper">
             <p>原文作者：<a href="https://syzry.github.io">s_y_z_r_y</a>
-            <p>原文链接：<a href="https://syzry.github.io/2024/07/25/hello-world/">https://syzry.github.io/2024/07/25/hello-world/</a>
-            <p>发表日期：<a href="https://syzry.github.io/2024/07/25/hello-world/">July 25th 2024, 8:39:15 pm</a>
-            <p>更新日期：<a href="https://syzry.github.io/2024/07/25/hello-world/">July 25th 2024, 9:16:50 pm</a>
+            <p>原文链接：<a href="https://syzry.github.io/2024/09/28/frida/">https://syzry.github.io/2024/09/28/frida/</a>
+            <p>发表日期：<a href="https://syzry.github.io/2024/09/28/frida/">September 28th 2024, 1:02:42 am</a>
+            <p>更新日期：<a href="https://syzry.github.io/2024/09/28/frida/">September 28th 2024, 1:39:15 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2024/08/05/TFCCTF2024wp/" title="TFCCTF2024 writeup">
-                    <div class="nextTitle">TFCCTF2024 writeup</div>
-                </a>
         </li>
         <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/08/05/TFCCTF2024wp/" title="TFCCTF2024 writeup">
+                    <div class="prevTitle">TFCCTF2024 writeup</div>
+                </a>
         </li>
     </ul>
     <!-- comment -->
@@ -512,7 +542,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%A6%E5%88%B0%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="toc-number">3.</span> <span class="toc-text">学到的东西</span></a></li></ol>
             </div>
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
